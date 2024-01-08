@@ -62,3 +62,36 @@ resource "null_resource" "docker_api-userprofile" {
     command = "az acr build --image devopsoh/api-userprofile:${local.apiuserprofile_base_image_tag} --registry ${azurerm_container_registry.container_registry.login_server} --build-arg build_version=${local.apiuserprofile_base_image_tag} --file ../../apis/userprofile/Dockerfile ../../apis/userprofile"
   }
 }
+############################################
+## CONTAINER REGISTRY                     ##
+############################################
+
+resource "azurerm_container_registry" "container_registry" {
+  name                     = "mycontainerregistry"
+  resource_group_name      = azurerm_resource_group.resource_group.name
+  location                 = azurerm_resource_group.resource_group.location
+  sku                      = "Basic"
+  admin_enabled            = true
+  georeplication_locations = ["eastus2"]
+}
+
+############################################
+## AZURE COGNITIVE SERVICES               ##
+############################################
+
+resource "azurerm_cognitive_account" "cognitive_account" {
+  name                = "mycognitiveaccount"
+  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = azurerm_resource_group.resource_group.location
+  kind                = "CognitiveServices"
+  sku_name            = "S0"
+}
+
+resource "azurerm_cognitive_customvision_account" "customvision_account" {
+  name                = "mycustomvisionaccount"
+  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = azurerm_resource_group.resource_group.location
+  kind                = "CustomVision.Training"
+  sku_name            = "S0"
+}
+

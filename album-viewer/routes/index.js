@@ -20,6 +20,12 @@ router.get("/", async function (req, res, next) {
       albums: data,
       background_color: Background,
     });
+    router.get("/", async function (req, res, next) {
+      try {
+        // Invoke album-api via Dapr
+        const url = `http://127.0.0.1:${DaprHttpPort}/v1.0/invoke/${AlbumService}/method/albums`;
+      }
+    
   } catch (err) {
     console.log("Error: ", err);
     next(err);
@@ -27,3 +33,7 @@ router.get("/", async function (req, res, next) {
 });
 
 module.exports = router;
+/**
+ * ]===-----> Album Viewer <-----===[
+ * This is a simple web app that displays a list of albums.
+ */

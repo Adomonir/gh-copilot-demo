@@ -1,0 +1,50 @@
+name: Pipeline
+
+on:
+        push:
+                branches:
+                        - main
+
+jobs:
+        build-and-push:
+                runs-on: ubuntu-latest
+
+                steps:
+                        - name: Checkout repository
+                          uses: actions/checkout@v2
+
+                        - name: Build and push Docker image
+                          uses: azure/docker-login@v1
+                          with:
+                              login-server: <ACR_LOGIN_SERVER>
+                              username: ${{ secrets.ACR_USERNAME }}
+                              password: ${{ secrets.ACR_PASSWORD }}
+
+                        - name: Build Docker image
+                          run: docker build -t album-api .
+
+                        - name: Tag Docker image
+                          run: docker tag album-api <ACR_LOGIN_SERVER>/album-api:${{ github.sha }}
+
+                        - name: Push Docker image
+                          run: docker push <ACR_LOGIN_SERVER>/album-api:${{ github.sha }}
+
+                        - name: Tag Docker image with run ID
+                          run: |
+                                docker tag album-api <ACR_LOGIN_SERVER>/album-api:${{ github.run_id }}
+                                docker push <ACR_LOGIN_SERVER>/album-api:${{ github.run_id }}
+                                        
+                        - name: Run tests on album-api image
+                          run: |
+                                # Add your test commands here
+
+                        - name: Deploy album-api image to dev AKS cluster
+                          run: |
+                                 # Add your deployment commands here
+
+                        - name: Find and replace %%VERSION%% in appmanifest.yml
+                        run: |
+                             find . -name "appmanifest.yml" -type f -exec sed -i "s/%%VERSION%%/${{ github.run_id }}/g" {} \;
+
+                                
+              

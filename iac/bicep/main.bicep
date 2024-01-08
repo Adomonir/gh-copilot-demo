@@ -129,3 +129,25 @@ output env array=[
   'Storage account name: ${storageAccount.name}'
   'Storage container name: ${blobContainer.name}'
 ]
+// Container Registry
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-06-01' = {
+  name: containerRegistryName
+  location: location
+  sku: {
+    name: 'Standard'
+  }
+  adminUserEnabled: false
+}
+
+// Azure Cognitive Services Custom Vision resource
+resource customVision 'Microsoft.CognitiveServices/accounts@2021-06-01' = {
+  name: customVisionName
+  location: location
+  kind: 'CustomVision.Training'
+  sku: {
+    name: 'S0'
+  }
+  properties: {
+    customVisionTrainingLocation: location
+  }
+}
