@@ -1,49 +1,48 @@
-// Create a UserController class using User model file
 using Microsoft.AspNetCore.Mvc;
-using Abstractions;
+using System.Collections.Generic;
 
-namespace Controllers;
-
-[ApiController]
-[Route("[controller]")]
-public class UserController : ControllerBase
+namespace dotnet.Controllers
 {
-    private readonly ILogger<UserController> _logger;
-    private readonly IUserService _userService;
-
-    public UserController(ILogger<UserController> logger, IUserService userService)
+    public class UserController : ControllerBase
     {
-        _logger = logger;
-        _userService = userService;
-    }
+        // GET: api/user
+        [HttpGet]
+        public ActionResult<IEnumerable<string>> Get()
+        {
+            // TODO: Implement logic to get all users
+            return new string[] { "user1", "user2", "user3" };
+        }
 
-    [HttpGet(Name = "GetUsers")]
-    public IEnumerable<User> Get()
-    {
-        return _userService.GetUsers();
-    }
+        // GET: api/user/{id}
+        [HttpGet("{id}")]
+        public ActionResult<string> Get(int id)
+        {
+            // TODO: Implement logic to get user by id
+            return "user" + id;
+        }
 
-    [HttpGet("{id}", Name = "GetUser")]
-    public User Get(int id)
-    {
-        return _userService.GetUser(id);
-    }
+        // POST: api/user
+        [HttpPost]
+        public ActionResult<string> Post([FromBody] string value)
+        {
+            // TODO: Implement logic to create a new user
+            return "User created: " + value;
+        }
 
-    [HttpPost(Name = "AddUser")]
-    public User Post([FromBody] User user)
-    {
-        return _userService.AddUser(user);
-    }
+        // PUT: api/user/{id}
+        [HttpPut("{id}")]
+        public ActionResult<string> Put(int id, [FromBody] string value)
+        {
+            // TODO: Implement logic to update user by id
+            return "User updated: " + value;
+        }
 
-    // [HttpPut("{id}", Name = "UpdateUser")]
-    // public User Put(int id, [FromBody] User user)
-    // {
-    //     return _userService.UpdateUser(id, user);
-    // }
-
-    [HttpDelete("{id}", Name = "DeleteUser")]
-    public User Delete(int id)
-    {
-        return _userService.DeleteUser(id);
+        // DELETE: api/user/{id}
+        [HttpDelete("{id}")]
+        public ActionResult<string> Delete(int id)
+        {
+            // TODO: Implement logic to delete user by id
+            return "User deleted: " + id;
+        }
     }
 }
